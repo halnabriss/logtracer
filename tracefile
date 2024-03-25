@@ -1,0 +1,57 @@
+#!/bin/bash
+### The following script reads new lines in your log File, but instead of depending on 
+### modification date and timestamp of your file, the script sepends on checking the 
+### number of lines in your files, using the wc command, if the number changes, the file
+### is marked as modified, and new lines are detected and traced.
+
+#Select the full path of your file
+MyFile="/tmp/myfile"
+
+#The following command finds the number of lines in your file
+NumberOfLines=$(wc -l $MyFile |awk '{print $1}')
+
+
+# The following function runs in infinite loop to check the status of your file
+traceFile(){
+
+#Check the new number of lines in your file
+NewNumberOfLines=$(wc -l $MyFile |awk '{print $1}')
+
+
+#If the number of lines increased, that means your file has changed
+if [  $NewNumberOfLines -gt $NumberOfLines ]
+    then
+    #The number of new lines added to your file
+    NewLines=$(( $NewNumberOfLines - $NumberOfLines ))
+
+    #Change the new number of lines of your file
+    NumberOfLines=$(wc -l $MyFile |awk '{print $1}' )
+    
+    #The following for loop reads each new added line
+    for x in $( tail -$NewLines $MyFile )
+        do
+        
+        # Change this according to your needs , or if you have a specific function
+        # Just run your function to take the $x as a parameter
+        # In the following command, if the line includes "sd" it will be printed to the stdout
+        echo $x |grep sd
+        done
+
+    elif [  $NewNumberOfLines -lt $NumberOfLines ]
+        then
+        NumberOfLines=$NewNumberOfLines
+
+
+fi
+
+}
+
+
+# call the traceFile function infinitely every 5 seconds to check the file status
+while true
+    do
+    traceFile
+    # change the number of seconds according to your needs, in this example, the file is checked
+    # every 5 seconds
+    sleep 5
+done
