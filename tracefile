@@ -1,4 +1,8 @@
 #!/bin/bash
+
+#The scripts in this repo are created by Hadi Alnabriss (alnabris@gmail.com) , you can use them, modify and redistribute without
+#any legal circumestances or licenses.
+
 ### The following script reads new lines in your log File, but instead of depending on 
 ### modification date and timestamp of your file, the script sepends on checking the 
 ### number of lines in your files, using the wc command, if the number changes, the file
